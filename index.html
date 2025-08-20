@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kontrol Relay via GitHub & Firebase</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    button { padding: 10px 20px; font-size: 18px; margin: 10px; }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+</head>
+<body>
+  <h1>Kontrol Relay</h1>
+  <p>Atur kondisi relay dari sini:</p>
+  <button onclick="setRelayState(true)">Nyalakan Relay</button>
+  <button onclick="setRelayState(false)">Matikan Relay</button>
+
+  <script>
+    // Konfigurasi Firebase Anda (ambil dari Project settings > General)
+    const firebaseConfig = {
+      apiKey: "API_KEY_ANDA",
+      projectId: "PROJECT_ID_ANDA",
+      databaseURL: "URL_DATABASE_ANDA"
+    };
+
+    // Inisialisasi Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const database = app.database();
+    const relayStateRef = database.ref('relay_state');
+
+    // Fungsi untuk mengubah nilai di Firebase
+    function setRelayState(state) {
+      relayStateRef.set(state)
+        .then(() => {
+          console.log('Status relay di Firebase berhasil diubah.');
+        })
+        .catch((error) => {
+          console.error('Terjadi error:', error);
+        });
+    }
+  </script>
+</body>
+</html>
