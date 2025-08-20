@@ -1,26 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Kontrol Relay via GitHub & Firebase</title>
+  <title>Kontrol Relay via Firebase</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    button { padding: 10px 20px; font-size: 18px; margin: 10px; }
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      margin-top: 50px;
+      background-color: #f0f2f5;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 { 
+      color: #333; 
+    }
+    p { 
+      color: #666; 
+      font-size: 1.1em;
+    }
+    button { 
+      padding: 15px 30px; 
+      font-size: 18px; 
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      transition: background-color 0.3s;
+    }
+    .on-button {
+      background-color: #4CAF50; /* Hijau */
+    }
+    .off-button {
+      background-color: #f44336; /* Merah */
+    }
+    .status {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #007bff;
+    }
   </style>
+  
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 </head>
 <body>
-  <h1>Kontrol Relay</h1>
-  <p>Atur kondisi relay dari sini:</p>
-  <button onclick="setRelayState(true)">Nyalakan Relay</button>
-  <button onclick="setRelayState(false)">Matikan Relay</button>
+  <div class="container">
+    <h1>Kontrol Relay</h1>
+    <p>Status Relay: <span class="status" id="relayStatus">Memuat...</span></p>
+    <button class="on-button" onclick="setRelayState(true)">Nyalakan Relay</button>
+    <button class="off-button" onclick="setRelayState(false)">Matikan Relay</button>
+  </div>
 
   <script>
-    // Konfigurasi Firebase Anda (ambil dari Project settings > General)
+    // Konfigurasi Firebase Anda yang sudah Anda berikan
     const firebaseConfig = {
-      apiKey: "API_KEY_ANDA",
-      projectId: "PROJECT_ID_ANDA",
-      databaseURL: "URL_DATABASE_ANDA"
+      apiKey: "AIzaSyBB8YEgZOgZmqagJM08nqfzn2NAu3LhZmo",
+      authDomain: "esp32-test1-ddd99.firebaseapp.com",
+      projectId: "esp32-test1-ddd99",
+      storageBucket: "esp32-test1-ddd99.firebasestorage.app",
+      messagingSenderId: "562417647539",
+      appId: "1:562417647539:web:ee7817b43c33cc8907d5c6"
     };
 
     // Inisialisasi Firebase
@@ -38,6 +84,16 @@
           console.error('Terjadi error:', error);
         });
     }
+
+    // Mendengarkan perubahan data secara real-time
+    relayStateRef.on('value', (snapshot) => {
+      const isRelayOn = snapshot.val();
+      const statusElement = document.getElementById('relayStatus');
+      if (statusElement) {
+        statusElement.textContent = isRelayOn ? 'HIDUP' : 'MATI';
+        statusElement.style.color = isRelayOn ? '#4CAF50' : '#f44336';
+      }
+    });
   </script>
 </body>
 </html>
